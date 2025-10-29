@@ -149,7 +149,7 @@ class _HomeTab extends StatelessWidget {
                         ),
                         CircleAvatar(
                           radius: 25,
-                          backgroundColor: Colors.white.withOpacity(0.2),
+                          backgroundColor: Colors.white.withValues(alpha: 0.2),
                           child: user.profileImage != null
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(25),
@@ -196,7 +196,7 @@ class _HomeTab extends StatelessWidget {
                             style: AppTheme.bodyLarge.copyWith(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.7),
+                              ).colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -209,7 +209,7 @@ class _HomeTab extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: _getStatusColor(
                             attendanceProvider,
-                          ).withOpacity(0.1),
+                          ).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: _getStatusColor(attendanceProvider),
@@ -693,7 +693,7 @@ class _CalendarTabState extends State<_CalendarTab> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),
@@ -721,7 +721,7 @@ class _CalendarTabState extends State<_CalendarTab> {
                     todayDecoration: BoxDecoration(
                       color: Theme.of(
                         context,
-                      ).colorScheme.primary.withOpacity(0.3),
+                      ).colorScheme.primary.withValues(alpha: 0.3),
                       shape: BoxShape.circle,
                     ),
                     markerDecoration: BoxDecoration(
@@ -769,7 +769,7 @@ class _CalendarTabState extends State<_CalendarTab> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 2),
                       ),
@@ -1174,7 +1174,7 @@ class _ProfileTabState extends State<_ProfileTab> {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundColor: Colors.white.withOpacity(0.2),
+                            backgroundColor: Colors.white.withValues(alpha: 0.2),
                             child: user.profileImage != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
@@ -1390,7 +1390,7 @@ class _ProfileTabState extends State<_ProfileTab> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -1423,9 +1423,9 @@ class _ProfileTabState extends State<_ProfileTab> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [

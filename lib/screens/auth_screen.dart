@@ -111,7 +111,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.primaryColor.withOpacity(0.3),
+                            color: AppTheme.primaryColor.withValues(alpha: 0.3),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -142,7 +142,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                       style: AppTheme.bodyLarge.copyWith(
                         color: Theme.of(
                           context,
-                        ).colorScheme.onSurface.withOpacity(0.7),
+                        ).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -169,7 +169,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                           labelStyle: TextStyle(
                             color: Theme.of(
                               context,
-                            ).colorScheme.onSurface.withOpacity(0.7),
+                            ).colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
                         validator: (value) {
@@ -208,7 +208,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                           labelStyle: TextStyle(
                             color: Theme.of(
                               context,
-                            ).colorScheme.onSurface.withOpacity(0.7),
+                            ).colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
                         validator: (value) {
@@ -271,7 +271,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                             child: Divider(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.3),
+                              ).colorScheme.onSurface.withValues(alpha: 0.3),
                             ),
                           ),
                           Padding(
@@ -281,7 +281,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                               style: TextStyle(
                                 color: Theme.of(
                                   context,
-                                ).colorScheme.onSurface.withOpacity(0.5),
+                                ).colorScheme.onSurface.withValues(alpha: 0.5),
                               ),
                             ),
                           ),
@@ -289,7 +289,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                             child: Divider(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.3),
+                              ).colorScheme.onSurface.withValues(alpha: 0.3),
                             ),
                           ),
                         ],
@@ -352,7 +352,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                             style: TextStyle(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.7),
+                              ).colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
                           ),
                           TextButton(

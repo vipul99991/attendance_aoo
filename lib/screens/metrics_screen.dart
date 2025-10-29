@@ -86,7 +86,7 @@ class _MetricsScreenState extends State<MetricsScreen>
           labelColor: Theme.of(context).colorScheme.primary,
           unselectedLabelColor: Theme.of(
             context,
-          ).colorScheme.onSurface.withOpacity(0.6),
+          ).colorScheme.onSurface.withValues(alpha: 0.6),
           indicatorColor: Theme.of(context).colorScheme.primary,
           tabs: const [
             Tab(text: 'Overview'),
@@ -213,7 +213,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -235,7 +235,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                     fontSize: 12,
                     color: Theme.of(
                       context,
-                    ).colorScheme.onSurface.withOpacity(0.7),
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -256,7 +256,7 @@ class _MetricsScreenState extends State<MetricsScreen>
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: progress.clamp(0.0, 1.0),
-              backgroundColor: color.withOpacity(0.2),
+              backgroundColor: color.withValues(alpha: 0.2),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 4,
             ),
@@ -274,7 +274,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -309,7 +309,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                         value: 100 - _productivityScore,
                         color: Theme.of(
                           context,
-                        ).colorScheme.primary.withOpacity(0.2),
+                        ).colorScheme.primary.withValues(alpha: 0.2),
                         radius: 60,
                         showTitle: false,
                       ),
@@ -336,7 +336,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                         fontSize: 14,
                         color: Theme.of(
                           context,
-                        ).colorScheme.onSurface.withOpacity(0.7),
+                        ).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -383,7 +383,7 @@ class _MetricsScreenState extends State<MetricsScreen>
           label,
           style: TextStyle(
             fontSize: 10,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
       ],
@@ -398,7 +398,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -442,7 +442,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                           style: TextStyle(
                             color: Theme.of(
                               context,
-                            ).colorScheme.onSurface.withOpacity(0.7),
+                            ).colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 12,
                           ),
                         );
@@ -459,7 +459,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                           style: TextStyle(
                             color: Theme.of(
                               context,
-                            ).colorScheme.onSurface.withOpacity(0.7),
+                            ).colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 10,
                           ),
                         );
@@ -481,7 +481,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                     return FlLine(
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withOpacity(0.1),
+                      ).colorScheme.onSurface.withValues(alpha: 0.1),
                       strokeWidth: 1,
                     );
                   },
@@ -540,7 +540,7 @@ class _MetricsScreenState extends State<MetricsScreen>
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -577,7 +577,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         Text(
           label,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             fontSize: 14,
           ),
         ),
@@ -617,7 +617,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -646,7 +646,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                     return FlLine(
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withOpacity(0.1),
+                      ).colorScheme.onSurface.withValues(alpha: 0.1),
                       strokeWidth: 1,
                     );
                   },
@@ -671,7 +671,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                             style: TextStyle(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onSurface.withOpacity(0.7),
+                              ).colorScheme.onSurface.withValues(alpha: 0.7),
                               fontSize: 12,
                             ),
                           );
@@ -690,7 +690,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                           style: TextStyle(
                             color: Theme.of(
                               context,
-                            ).colorScheme.onSurface.withOpacity(0.7),
+                            ).colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 10,
                           ),
                         );
@@ -727,7 +727,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                       show: true,
                       color: Theme.of(
                         context,
-                      ).colorScheme.primary.withOpacity(0.1),
+                      ).colorScheme.primary.withValues(alpha: 0.1),
                     ),
                   ),
                 ],
@@ -747,7 +747,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -785,7 +785,7 @@ class _MetricsScreenState extends State<MetricsScreen>
           Text(
             label,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),
@@ -816,7 +816,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -850,7 +850,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                 decoration: BoxDecoration(
                   color: Theme.of(
                     context,
-                  ).colorScheme.primary.withOpacity(intensity),
+                  ).colorScheme.primary.withValues(alpha: intensity),
                   borderRadius: BorderRadius.circular(4),
                 ),
               );
@@ -865,7 +865,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                 style: TextStyle(
                   color: Theme.of(
                     context,
-                  ).colorScheme.onSurface.withOpacity(0.7),
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
                   fontSize: 12,
                 ),
               ),
@@ -878,7 +878,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                     decoration: BoxDecoration(
                       color: Theme.of(
                         context,
-                      ).colorScheme.primary.withOpacity(index / 4),
+                      ).colorScheme.primary.withValues(alpha: index / 4),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   );
@@ -889,7 +889,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                 style: TextStyle(
                   color: Theme.of(
                     context,
-                  ).colorScheme.onSurface.withOpacity(0.7),
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
                   fontSize: 12,
                 ),
               ),
@@ -938,7 +938,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         border: isAchieved ? Border.all(color: Colors.green, width: 2) : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -970,7 +970,7 @@ class _MetricsScreenState extends State<MetricsScreen>
           Text(
             'Target: $target',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),
@@ -995,7 +995,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                   fontWeight: FontWeight.w600,
                   color: Theme.of(
                     context,
-                  ).colorScheme.onSurface.withOpacity(0.7),
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -1005,7 +1005,7 @@ class _MetricsScreenState extends State<MetricsScreen>
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: progress.clamp(0.0, 1.0),
-              backgroundColor: color.withOpacity(0.2),
+              backgroundColor: color.withValues(alpha: 0.2),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 8,
             ),
@@ -1022,12 +1022,12 @@ class _MetricsScreenState extends State<MetricsScreen>
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
           style: BorderStyle.solid,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1053,7 +1053,7 @@ class _MetricsScreenState extends State<MetricsScreen>
           Text(
             'Create custom performance goals',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),
@@ -1120,7 +1120,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1132,7 +1132,7 @@ class _MetricsScreenState extends State<MetricsScreen>
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 30),
@@ -1160,7 +1160,7 @@ class _MetricsScreenState extends State<MetricsScreen>
                   style: TextStyle(
                     color: Theme.of(
                       context,
-                    ).colorScheme.onSurface.withOpacity(0.7),
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                     fontSize: 14,
                   ),
                 ),
@@ -1181,10 +1181,10 @@ class _MetricsScreenState extends State<MetricsScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -1208,7 +1208,7 @@ class _MetricsScreenState extends State<MetricsScreen>
             'Create personalized reports with specific metrics and date ranges',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),

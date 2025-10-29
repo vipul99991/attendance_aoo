@@ -161,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen>
             end: Alignment.bottomRight,
             colors: [
               Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor.withOpacity(0.7),
+              Theme.of(context).primaryColor.withValues(alpha: 0.7),
             ],
           ),
         ),
@@ -186,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen>
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen>
                         Text(
                           'Welcome back! Please sign in.',
                           style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(color: Colors.white.withOpacity(0.8)),
+                              ?.copyWith(color: Colors.white.withValues(alpha: 0.8)),
                         ),
                       ],
                     ),
@@ -225,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen>
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 20,
                             offset: const Offset(0, 5),
                           ),

@@ -194,7 +194,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               borderRadius: BorderRadius.circular(75),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -222,7 +222,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: AppTheme.bodyLarge.copyWith(
               color: Theme.of(
                 context,
-              ).colorScheme.onSurface.withOpacity(0.7),
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
               height: 1.6,
             ),
             textAlign: TextAlign.center,
@@ -241,7 +241,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       decoration: BoxDecoration(
         color: _currentPage == index
             ? AppTheme.primaryColor
-            : AppTheme.primaryColor.withOpacity(0.3),
+            : AppTheme.primaryColor.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(4),
       ),
     );

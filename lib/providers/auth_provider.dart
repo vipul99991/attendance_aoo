@@ -16,7 +16,6 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> _initializeHive() async {
     try {
-      await Hive.initFlutter();
       _userBox = await Hive.openBox('user_data');
       await _loadUserFromStorage();
     } catch (e) {

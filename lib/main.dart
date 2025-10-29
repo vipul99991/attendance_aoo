@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'providers/attendance_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/user_provider.dart';
+import 'providers/auth_provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/auth_screen.dart';
@@ -15,14 +17,16 @@ import 'screens/attendance_screen.dart';
 import 'screens/calendar_screen.dart';
 import 'screens/statistics_screen.dart';
 import 'screens/settings_screen.dart';
-import 'services/database_service.dart';
 import 'utils/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize database
-  await DatabaseService().initializeDatabase();
+  // Initialize Hive
+  await Hive.initFlutter();
+
+  // Initialize database (skip on desktop platforms)
+  // await DatabaseService().initializeDatabase();
 
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
@@ -46,6 +50,7 @@ class AttendanceApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => AttendanceProvider()),
       ],
       child: Consumer<ThemeProvider>(

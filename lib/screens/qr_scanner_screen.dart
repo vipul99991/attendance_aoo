@@ -168,7 +168,7 @@ class _QRScannerScreenState extends State<QRScannerScreen>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.primaryColor.withOpacity(0.5),
+                            color: AppTheme.primaryColor.withValues(alpha: 0.5),
                             blurRadius: 10,
                             spreadRadius: 2,
                           ),
@@ -188,7 +188,7 @@ class _QRScannerScreenState extends State<QRScannerScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.7),
+        color: Colors.black.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -224,7 +224,7 @@ class _QRScannerScreenState extends State<QRScannerScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.8),
+        color: Colors.black.withValues(alpha: 0.8),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -239,7 +239,7 @@ class _QRScannerScreenState extends State<QRScannerScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppTheme.successColor.withOpacity(0.2),
+                  color: AppTheme.successColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppTheme.successColor, width: 1),
                 ),
@@ -512,8 +512,8 @@ class _QRScannerScreenState extends State<QRScannerScreen>
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: status == 'Success'
-            ? AppTheme.successColor.withOpacity(0.2)
-            : AppTheme.errorColor.withOpacity(0.2),
+            ? AppTheme.successColor.withValues(alpha: 0.2)
+            : AppTheme.errorColor.withValues(alpha: 0.2),
         child: Icon(
           status == 'Success' ? Icons.check : Icons.error,
           color: status == 'Success'
