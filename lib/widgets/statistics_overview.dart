@@ -17,7 +17,7 @@ class StatisticsOverview extends StatelessWidget {
             Text(
               'This Month Overview',
               style: AppTheme.headingSmall.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

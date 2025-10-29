@@ -78,7 +78,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
             Text(
               'Leave Type',
               style: AppTheme.headingSmall.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
@@ -91,7 +91,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                 ),
               ),
               child: DropdownButtonFormField<String>(
-                value: _selectedLeaveType,
+                initialValue: _selectedLeaveType,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
@@ -268,7 +268,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
             Text(
               'Reason',
               style: AppTheme.headingSmall.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
@@ -329,7 +329,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                   Text(
                     'Leave Balance',
                     style: AppTheme.headingSmall.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -361,7 +361,7 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
         Text(
           label,
           style: AppTheme.bodyMedium.copyWith(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 8),

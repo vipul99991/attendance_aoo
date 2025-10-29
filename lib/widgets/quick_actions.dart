@@ -13,7 +13,7 @@ class QuickActions extends StatelessWidget {
         Text(
           'Quick Actions',
           style: AppTheme.headingSmall.copyWith(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
 

@@ -34,12 +34,10 @@ class AppTheme {
       primary: primaryColor,
       secondary: secondaryColor,
       surface: Colors.white,
-      background: Color(0xFFF8FAFC),
       error: errorColor,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: Color(0xFF1E293B),
-      onBackground: Color(0xFF334155),
       onError: Colors.white,
     );
 
@@ -170,12 +168,10 @@ class AppTheme {
       primary: primaryColor,
       secondary: secondaryColor,
       surface: Color(0xFF1E293B),
-      background: Color(0xFF0F172A),
       error: errorColor,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: Color(0xFFF1F5F9),
-      onBackground: Color(0xFFE2E8F0),
       onError: Colors.white,
     );
 

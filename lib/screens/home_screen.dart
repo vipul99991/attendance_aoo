@@ -185,7 +185,7 @@ class _HomeTab extends StatelessWidget {
                           Text(
                             DateFormat('EEEE, MMMM d').format(now),
                             style: AppTheme.headingSmall.copyWith(
-                              color: Theme.of(context).colorScheme.onBackground,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -196,7 +196,7 @@ class _HomeTab extends StatelessWidget {
                             style: AppTheme.bodyLarge.copyWith(
                               color: Theme.of(
                                 context,
-                              ).colorScheme.onBackground.withOpacity(0.7),
+                              ).colorScheme.onSurface.withOpacity(0.7),
                             ),
                           ),
                         ],
@@ -1379,7 +1379,7 @@ class _ProfileTabState extends State<_ProfileTab> {
         Text(
           title,
           style: AppTheme.headingSmall.copyWith(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -209,7 +209,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Text(
             data.title,
             style: AppTheme.headingMedium.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -222,7 +222,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: AppTheme.bodyLarge.copyWith(
               color: Theme.of(
                 context,
-              ).colorScheme.onBackground.withOpacity(0.7),
+              ).colorScheme.onSurface.withOpacity(0.7),
               height: 1.6,
             ),
             textAlign: TextAlign.center,

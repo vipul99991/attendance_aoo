@@ -112,7 +112,7 @@ class _QRScannerScreenState extends State<QRScannerScreen>
 
   Widget _buildScanningOverlay() {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 250,
         height: 250,
         child: Stack(

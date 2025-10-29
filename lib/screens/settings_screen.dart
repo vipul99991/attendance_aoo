@@ -206,7 +206,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Text(
               title,
               style: AppTheme.headingSmall.copyWith(
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -242,7 +242,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       subtitle: Text(subtitle, maxLines: 2, overflow: TextOverflow.ellipsis),
       value: value,
       onChanged: onChanged,
-      activeColor: Theme.of(context).colorScheme.primary,
+      activeThumbColor: Theme.of(context).colorScheme.primary,
     );
   }
 

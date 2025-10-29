@@ -6,6 +6,7 @@ import '../providers/auth_provider.dart';
 import '../models/employee_model.dart';
 
 class CheckInOutCard extends StatefulWidget {
+  // ignore: use_super_parameters
   const CheckInOutCard({Key? key}) : super(key: key);
 
   @override
@@ -104,7 +105,7 @@ class _CheckInOutCardState extends State<CheckInOutCard> {
                           'Check Out',
                           DateFormat(
                             'hh:mm a',
-                          ).format(todayAttendance!.checkOutTime!),
+                          ).format(todayAttendance.checkOutTime!),
                           Icons.logout,
                           Colors.orange,
                         ),

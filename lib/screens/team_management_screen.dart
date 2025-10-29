@@ -473,7 +473,7 @@ class _TeamManagementScreenState extends State<TeamManagementScreen>
           Text(
             'Team Analytics',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
@@ -520,7 +520,7 @@ class _TeamManagementScreenState extends State<TeamManagementScreen>
           Text(
             'Department Breakdown',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
@@ -640,7 +640,7 @@ class _TeamManagementScreenState extends State<TeamManagementScreen>
           Text(
             'Team Reports',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
@@ -687,7 +687,7 @@ class _TeamManagementScreenState extends State<TeamManagementScreen>
           Text(
             'Recent Reports',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),

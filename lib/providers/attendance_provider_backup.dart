@@ -1,17 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:camera/camera.dart';
-import 'package:uuid/uuid.dart';
-import 'package:intl/intl.dart';
-import '../models/employee_model.dart';
-import '../models/attendance_model.dart';
+// ignore: library_prefixes
 import '../models/attendance.dart' as AttendanceModel;
-import '../models/attendance.dart' show AttendanceStatus as ExternalAttendanceStatus;
-import '../services/location_service.dart';
-import '../services/camera_service.dart';
 import '../services/database_service.dart';
-import '../utils/constants.dart';
 // Remove local enum to use the one from models
 enum AttendanceStatus { present, absent, onLeave }
 
@@ -22,7 +12,7 @@ class Attendance {
   final DateTime? checkInTime;
   final DateTime? checkOutTime;
   final String? checkInLocation;
-  final ExternalAttendanceStatus status;
+  final String? checkOutLocation;
   final AttendanceStatus status;
   final String? notes;
   final Duration? totalHours;
@@ -51,7 +41,7 @@ class Attendance {
     DateTime? checkInTime,
     DateTime? checkOutTime,
     String? checkInLocation,
-    ExternalAttendanceStatus? status,
+    String? checkOutLocation,
     AttendanceStatus? status,
     String? notes,
     Duration? totalHours,
@@ -103,7 +93,6 @@ class Attendance {
           ? DateTime.fromMillisecondsSinceEpoch(map['checkOutTime'])
           : null,
       checkInLocation: map['checkInLocation'],
-      status: ExternalAttendanceStatus.values[map['status']],
       status: AttendanceStatus.values[map['status']],
       notes: map['notes'],
       totalHours: map['totalHours'] != null
@@ -190,7 +179,6 @@ class LeaveRequest {
 class AttendanceProvider extends ChangeNotifier {
   final DatabaseService _databaseService = DatabaseService();
   List<AttendanceModel.Attendance> _attendanceRecords = [];
-  List<LeaveRequest> _leaveRequests = [];
   bool _isLoading = false;
   Attendance? _todayAttendance;
   List<AttendanceModel.Attendance> get attendanceRecords => _attendanceRecords;
@@ -246,13 +234,25 @@ class AttendanceProvider extends ChangeNotifier {
         userId: userId,
         date: today,
         checkInTime: now,
-        status: ExternalAttendanceStatus.present,
         status: AttendanceStatus.present,
         notes: notes,
         isLateCheckIn: _isLateCheckIn(now),
       );
 
-      await _databaseService.insertAttendance(attendance);
+      await _databaseService.insertAttendance(AttendanceModel.Attendance(
+        id: attendance.id,
+        userId: attendance.userId,
+        date: attendance.date,
+        checkInTime: attendance.checkInTime,
+        checkOutTime: attendance.checkOutTime,
+        checkInLocation: attendance.checkInLocation,
+        checkOutLocation: attendance.checkOutLocation,
+        status: AttendanceModel.AttendanceStatus.values[attendance.status.index],
+        notes: attendance.notes,
+        totalHours: attendance.totalHours,
+        isLateCheckIn: attendance.isLateCheckIn,
+        isEarlyCheckOut: attendance.isEarlyCheckOut,
+      ));
       _todayAttendance = attendance;
 
       // Update the list
@@ -270,7 +270,7 @@ class AttendanceProvider extends ChangeNotifier {
           checkOutTime: attendance.checkOutTime,
           checkInLocation: attendance.checkInLocation,
           checkOutLocation: attendance.checkOutLocation,
-          status: attendance.status,
+          status: AttendanceModel.AttendanceStatus.values[attendance.status.index],
           notes: attendance.notes,
           totalHours: attendance.totalHours,
           isLateCheckIn: attendance.isLateCheckIn,
@@ -285,7 +285,7 @@ class AttendanceProvider extends ChangeNotifier {
           checkOutTime: attendance.checkOutTime,
           checkInLocation: attendance.checkInLocation,
           checkOutLocation: attendance.checkOutLocation,
-          status: attendance.status,
+          status: AttendanceModel.AttendanceStatus.values[attendance.status.index],
           notes: attendance.notes,
           totalHours: attendance.totalHours,
           isLateCheckIn: attendance.isLateCheckIn,
@@ -298,22 +298,12 @@ class AttendanceProvider extends ChangeNotifier {
       debugPrint('Error checking in: $e');
       return false;
     }
-      if (index >= 0) {
-        _attendanceRecords[index] = AttendanceModel.Attendance(
-          id: updatedAttendance.id,
-          userId: updatedAttendance.userId,
-          date: updatedAttendance.date,
-          checkInTime: updatedAttendance.checkInTime,
-          checkOutTime: updatedAttendance.checkOutTime,
-          checkInLocation: updatedAttendance.checkInLocation,
-          checkOutLocation: updatedAttendance.checkOutLocation,
-          status: updatedAttendance.status,
-          notes: updatedAttendance.notes,
-          totalHours: updatedAttendance.totalHours,
-          isLateCheckIn: updatedAttendance.isLateCheckIn,
-          isEarlyCheckOut: updatedAttendance.isEarlyCheckOut,
-        );
-      }
+  }
+
+  Future<bool> checkOut({
+    String? location,
+    String? notes,
+  }) async {
     if (_todayAttendance == null) return false;
 
     try {
@@ -329,7 +319,20 @@ class AttendanceProvider extends ChangeNotifier {
         isEarlyCheckOut: _isEarlyCheckOut(now),
       );
 
-      await _databaseService.updateAttendance(updatedAttendance);
+      await _databaseService.updateAttendance(AttendanceModel.Attendance(
+        id: updatedAttendance.id,
+        userId: updatedAttendance.userId,
+        date: updatedAttendance.date,
+        checkInTime: updatedAttendance.checkInTime,
+        checkOutTime: updatedAttendance.checkOutTime,
+        checkInLocation: updatedAttendance.checkInLocation,
+        checkOutLocation: updatedAttendance.checkOutLocation,
+        status: AttendanceModel.AttendanceStatus.values[updatedAttendance.status.index],
+        notes: updatedAttendance.notes,
+        totalHours: updatedAttendance.totalHours,
+        isLateCheckIn: updatedAttendance.isLateCheckIn,
+        isEarlyCheckOut: updatedAttendance.isEarlyCheckOut,
+      ));
       _todayAttendance = updatedAttendance;
 
       // Update the list
@@ -338,7 +341,20 @@ class AttendanceProvider extends ChangeNotifier {
       );
 
       if (index >= 0) {
-        _attendanceRecords[index] = AttendanceModel.Attendance.fromMap(updatedAttendance.toMap());
+        _attendanceRecords[index] = AttendanceModel.Attendance(
+          id: updatedAttendance.id,
+          userId: updatedAttendance.userId,
+          date: updatedAttendance.date,
+          checkInTime: updatedAttendance.checkInTime,
+          checkOutTime: updatedAttendance.checkOutTime,
+          checkInLocation: updatedAttendance.checkInLocation,
+          checkOutLocation: updatedAttendance.checkOutLocation,
+          status: AttendanceModel.AttendanceStatus.values[updatedAttendance.status.index],
+          notes: updatedAttendance.notes,
+          totalHours: updatedAttendance.totalHours,
+          isLateCheckIn: updatedAttendance.isLateCheckIn,
+          isEarlyCheckOut: updatedAttendance.isEarlyCheckOut,
+        );
       }
       notifyListeners();
       return true;
@@ -349,18 +365,16 @@ class AttendanceProvider extends ChangeNotifier {
   }
 
   int get totalPresentDays => _attendanceRecords
-      .where((record) => record.status == ExternalAttendanceStatus.present)
+      .where((record) => record.status == AttendanceModel.AttendanceStatus.present)
       .length;
 
   int get totalAbsentDays => _attendanceRecords
-      .where((record) => record.status == ExternalAttendanceStatus.absent)
+      .where((record) => record.status == AttendanceModel.AttendanceStatus.absent)
       .length;
 
   int get totalLeaveDays => _attendanceRecords
-      .where((record) => record.status == ExternalAttendanceStatus.onLeave)
+      .where((record) => record.status == AttendanceModel.AttendanceStatus.onLeave)
       .length;
-      .length;
-
   double get attendancePercentage {
     if (_attendanceRecords.isEmpty) return 0.0;
     return (totalPresentDays / _attendanceRecords.length) * 100;
@@ -379,7 +393,7 @@ class AttendanceProvider extends ChangeNotifier {
 
     return Duration(milliseconds: totalMilliseconds ~/ presentRecords.length);
   }
-
+  
   List<AttendanceModel.Attendance> getAttendanceForMonth(DateTime month) {
     return _attendanceRecords.where((record) {
       return record.date.year == month.year && record.date.month == month.month;
@@ -415,20 +429,19 @@ class AttendanceProvider extends ChangeNotifier {
     );
     return checkOutTime.isBefore(standardTime);
   }
-  ExternalAttendanceStatus _mapAttendanceStatus(dynamic status) {
-    if (status is ExternalAttendanceStatus) return status;
+  AttendanceStatus _mapAttendanceStatus(dynamic status) {
+    if (status is AttendanceStatus) return status;
     // Assuming the external AttendanceStatus has similar values
     switch (status.toString().split('.').last) {
       case 'present':
-        return ExternalAttendanceStatus.present;
+        return AttendanceStatus.present;
       case 'absent':
-        return ExternalAttendanceStatus.absent;
+        return AttendanceStatus.absent;
       case 'onLeave':
-        return ExternalAttendanceStatus.onLeave;
+        return AttendanceStatus.onLeave;
       default:
-        return ExternalAttendanceStatus.absent;
+        return AttendanceStatus.absent;
     }
-  }
   }
 }
 

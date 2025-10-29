@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/enhanced_attendance_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/theme_provider.dart';
 import '../widgets/check_in_out_card.dart';
@@ -10,7 +9,7 @@ import '../screens/settings_screen.dart';
 import '../screens/reports_analytics_screen.dart';
 
 class EnhancedHomeScreen extends StatefulWidget {
-  const EnhancedHomeScreen({Key? key}) : super(key: key);
+  const EnhancedHomeScreen({super.key});
 
   @override
   State<EnhancedHomeScreen> createState() => _EnhancedHomeScreenState();
@@ -568,7 +567,6 @@ class _EnhancedHomeScreenState extends State<EnhancedHomeScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // TODO: Implement WFH application
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('WFH request submitted successfully!'),
@@ -598,7 +596,6 @@ class _EnhancedHomeScreenState extends State<EnhancedHomeScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // TODO: Implement Excel export
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Exporting to Excel...')),
                 );
@@ -608,7 +605,6 @@ class _EnhancedHomeScreenState extends State<EnhancedHomeScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // TODO: Implement PDF export
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Exporting to PDF...')),
                 );

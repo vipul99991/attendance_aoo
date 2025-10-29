@@ -109,7 +109,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen>
           Text(
             'Key Metrics',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
@@ -163,7 +163,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen>
           Text(
             'Weekly Summary',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
@@ -200,7 +200,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen>
           Text(
             'Recent Activity',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
@@ -757,7 +757,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen>
           Text(
             'Export Reports',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
@@ -820,7 +820,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen>
                 Text(
                   'Custom Export',
                   style: AppTheme.headingSmall.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -913,7 +913,7 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen>
           Text(
             'Recent Exports',
             style: AppTheme.headingSmall.copyWith(
-              color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),

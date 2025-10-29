@@ -143,7 +143,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         Text(
           'Key Performance Indicators',
           style: AppTheme.headingSmall.copyWith(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -528,7 +528,7 @@ class _MetricsScreenState extends State<MetricsScreen>
         Text(
           'Quick Statistics',
           style: AppTheme.headingSmall.copyWith(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
