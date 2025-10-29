@@ -1,0 +1,118 @@
+name: attendance_aoo
+description: "Advanced Attendance Management Application with modern UI/UX"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI Components
+  cupertino_icons: ^1.0.8
+  flutter_svg: ^2.0.9
+  font_awesome_flutter: ^10.6.0
+  
+  # State Management
+  provider: ^6.1.1
+  
+  # Animations
+  lottie: ^2.7.0
+  animated_text_kit: ^4.2.2
+  shimmer: ^3.0.0
+  
+  # Navigation
+  go_router: ^12.1.3
+  
+  # Storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.2.2
+  sqflite: ^2.3.0
+  
+  # Date/Time
+  intl: ^0.19.0
+  table_calendar: ^3.0.9
+  
+  # Charts
+  fl_chart: ^0.64.0
+  
+  # Media
+  image_picker: ^1.0.4
+  camera: ^0.10.5+5
+  cached_network_image: ^3.3.0
+  
+  # Utilities
+  uuid: ^4.2.1
+  url_launcher: ^6.2.1
+  path: ^1.8.3
+  
+  # Location
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  
+  # QR Code
+  qr_flutter: ^4.1.0
+  
+  # HTTP & JSON
+  http: ^1.1.0
+  dio: ^5.3.2
+  
+  # Background Services
+  flutter_background_service: ^5.0.5
+  
+  # File Operations & Export
+  excel: ^4.0.2
+  pdf: ^3.10.4
+  open_file: ^3.3.2
+  share_plus: ^7.2.1
+  path_provider: ^2.1.1
+  permission_handler: ^11.0.1
+  
+  # Email
+  mailer: ^6.0.1
+  
+  # Misc
+  material_color_utilities: ^0.11.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.7
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/animations/
+    - assets/icons/
+    - assets/logos/
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    background_color: "#2196F3"
+    theme_color: "#2196F3"
+  windows:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+
