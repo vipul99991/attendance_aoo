@@ -92,16 +92,16 @@ class WorkingHours {
       final start = parseTime(startTime);
       final end = parseTime(endTime);
       final workDuration = end.difference(start);
-      
+
       // Ensure the break duration doesn't exceed the total work duration
       final breakDurationMs = Duration(minutes: breakDuration).inMilliseconds;
       final workDurationMs = workDuration.inMilliseconds;
-      
+
       if (breakDurationMs > workDurationMs) {
         // If break is longer than total duration, return zero
         return Duration.zero;
       }
-      
+
       return Duration(milliseconds: workDurationMs - breakDurationMs);
     } catch (e) {
       debugPrint('Error calculating total work duration: $e');
@@ -260,7 +260,10 @@ class LeaveRequest {
   final String? approvedBy;
   final DateTime? approvedAt;
   final String? rejectionReason;
+  final String? adminComments;
   final DateTime createdAt;
+  final int leaveDays;
+  final List<String> attachments;
 
   LeaveRequest({
     required this.id,
@@ -273,7 +276,10 @@ class LeaveRequest {
     this.approvedBy,
     this.approvedAt,
     this.rejectionReason,
+    this.adminComments,
     required this.createdAt,
+    required this.leaveDays,
+    this.attachments = const [],
   });
 
   factory LeaveRequest.fromJson(Map<String, dynamic> json) {
@@ -296,7 +302,10 @@ class LeaveRequest {
           ? DateTime.parse(json['approved_at'])
           : null,
       rejectionReason: json['rejection_reason'],
+      adminComments: json['admin_comments'],
       createdAt: DateTime.parse(json['created_at']),
+      leaveDays: json['leave_days'] ?? 0,
+      attachments: List<String>.from(json['attachments'] ?? []),
     );
   }
 
@@ -312,18 +321,55 @@ class LeaveRequest {
       'approved_by': approvedBy,
       'approved_at': approvedAt?.toIso8601String(),
       'rejection_reason': rejectionReason,
+      'admin_comments': adminComments,
       'created_at': createdAt.toIso8601String(),
+      'leave_days': leaveDays,
+      'attachments': attachments,
     };
   }
 
   int get totalDays {
     return endDate.difference(startDate).inDays + 1;
   }
+
+  LeaveRequest copyWith({
+    String? id,
+    String? employeeId,
+    LeaveType? type,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? reason,
+    LeaveStatus? status,
+    String? approvedBy,
+    DateTime? approvedAt,
+    String? rejectionReason,
+    String? adminComments,
+    DateTime? createdAt,
+    int? leaveDays,
+    List<String>? attachments,
+  }) {
+    return LeaveRequest(
+      id: id ?? this.id,
+      employeeId: employeeId ?? this.employeeId,
+      type: type ?? this.type,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      reason: reason ?? this.reason,
+      status: status ?? this.status,
+      approvedBy: approvedBy ?? this.approvedBy,
+      approvedAt: approvedAt ?? this.approvedAt,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      adminComments: adminComments ?? this.adminComments,
+      createdAt: createdAt ?? this.createdAt,
+      leaveDays: leaveDays ?? this.leaveDays,
+      attachments: attachments ?? this.attachments,
+    );
+  }
 }
 
 enum LeaveType {
+  annual,
   sick,
-  vacation,
   personal,
   emergency,
   maternity,

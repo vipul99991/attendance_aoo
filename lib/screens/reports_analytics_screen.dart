@@ -468,7 +468,9 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen>
             decoration: BoxDecoration(
               color: AppTheme.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.3)),
+              border: Border.all(
+                color: AppTheme.primaryColor.withValues(alpha: 0.3),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1119,10 +1121,12 @@ class _ReportsAnalyticsScreenState extends State<ReportsAnalyticsScreen>
 
     // Simulate report generation
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Custom report generated successfully')),
-      );
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Custom report generated successfully')),
+        );
+      }
     });
   }
 }

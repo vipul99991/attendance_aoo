@@ -9,6 +9,7 @@ import 'providers/attendance_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/user_provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/leave_provider.dart';
 import 'services/attendance_service.dart';
 import 'services/statistics_service.dart';
 import 'data/attendance_repository.dart';
@@ -32,7 +33,7 @@ void main() async {
   await Hive.initFlutter();
 
   // Initialize database (skip on desktop platforms)
- // await DatabaseService().initializeDatabase();
+  // await DatabaseService().initializeDatabase();
 
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
@@ -51,12 +52,13 @@ class AttendanceApp extends StatelessWidget {
   const AttendanceApp({super.key});
 
   @override
- Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => LeaveProvider()),
         ChangeNotifierProvider(
           create: (context) => AttendanceProvider(
             attendanceService: AttendanceService(

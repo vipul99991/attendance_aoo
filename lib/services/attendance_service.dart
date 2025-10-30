@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:uuid/uuid.dart';
-import 'package:intl/intl.dart';
 import '../models/employee_model.dart';
 import '../services/location_service.dart';
 import '../services/camera_service.dart';

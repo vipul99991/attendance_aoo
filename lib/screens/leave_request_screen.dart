@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../utils/app_theme.dart';
+import '../models/employee_model.dart';
+import '../providers/leave_provider.dart';
+import '../providers/auth_provider.dart';
 
 class LeaveRequestScreen extends StatefulWidget {
   const LeaveRequestScreen({super.key});
@@ -87,7 +91,9 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outline.withValues(alpha: 0.2),
                 ),
               ),
               child: DropdownButtonFormField<String>(
@@ -139,7 +145,9 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outline.withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -320,7 +328,9 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outline.withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -383,7 +393,9 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withValues(alpha: 0.2),
               ),
             ),
             child: Row(
@@ -516,7 +528,40 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
 
   void _submitLeaveRequest() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Submit leave request to backend
+      // Submit leave request using LeaveProvider
+      final leaveProvider = Provider.of<LeaveProvider>(context, listen: false);
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      // Calculate leave days
+      final leaveDays = _toDate.difference(_fromDate).inDays + 1;
+
+      // Convert string leave type to enum
+      LeaveType leaveType = LeaveType.annual;
+      switch (_selectedLeaveType) {
+        case 'sick':
+          leaveType = LeaveType.sick;
+          break;
+        case 'annual':
+          leaveType = LeaveType.annual;
+          break;
+        case 'personal':
+          leaveType = LeaveType.personal;
+          break;
+        case 'maternity':
+          leaveType = LeaveType.maternity;
+          break;
+        case 'paternity':
+          leaveType = LeaveType.paternity;
+          break;
+      }
+
+      leaveProvider.submitLeaveRequest(
+        employeeId: authProvider.currentEmployee?.employeeId ?? '',
+        type: leaveType,
+        startDate: _fromDate,
+        endDate: _toDate,
+        reason: _reasonController.text,
+      );
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -564,7 +609,12 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                // TODO: Cancel leave request
+                // Cancel leave request using LeaveProvider
+                final leaveProvider = Provider.of<LeaveProvider>(
+                  context,
+                  listen: false,
+                );
+                leaveProvider.cancelLeaveRequest(leave['id'] ?? '');
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Leave request cancelled')),
                 );
