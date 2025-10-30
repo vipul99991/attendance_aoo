@@ -96,10 +96,10 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // Calculate if current time is overtime
-  bool isOvertimeHour(DateTime dateTime) {
-    if (_currentEmployee?.workingHours == null) return false;
+ bool isOvertimeHour(DateTime dateTime) {
+    final workingHours = _currentEmployee?.workingHours;
+    if (workingHours == null) return false;
 
-    final workingHours = _currentEmployee!.workingHours;
     final endTime = _parseTime(workingHours.endTime, dateTime);
     final currentTime = DateTime(
       dateTime.year,
@@ -114,12 +114,30 @@ class AuthProvider extends ChangeNotifier {
 
   DateTime _parseTime(String time, DateTime date) {
     final parts = time.split(':');
+    // Validate that we have valid time parts
+    if (parts.length != 2) {
+      return DateTime(date.year, date.month, date.day, 9, 0); // Default to 9 AM
+    }
+
+    int hour, minute;
+    try {
+      hour = int.parse(parts[0]);
+      minute = int.parse(parts[1]);
+    } catch (e) {
+      return DateTime(date.year, date.month, date.day, 9, 0); // Default to 9 AM
+    }
+
+    // Validate hour and minute ranges
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+      return DateTime(date.year, date.month, date.day, 9, 0); // Default to 9 AM
+    }
+
     return DateTime(
       date.year,
       date.month,
       date.day,
-      int.parse(parts[0]),
-      int.parse(parts[1]),
+      hour,
+      minute,
     );
   } // Get standard work end time for the day
 
@@ -130,12 +148,30 @@ class AuthProvider extends ChangeNotifier {
     }
 
     final parts = workingHours.endTime.split(':');
+    // Validate that we have valid time parts
+    if (parts.length != 2) {
+      return DateTime(date.year, date.month, date.day, 17, 0); // Default to 5 PM
+    }
+
+    int hour, minute;
+    try {
+      hour = int.parse(parts[0]);
+      minute = int.parse(parts[1]);
+    } catch (e) {
+      return DateTime(date.year, date.month, date.day, 17, 0); // Default to 5 PM
+    }
+
+    // Validate hour and minute ranges
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+      return DateTime(date.year, date.month, date.day, 17, 0); // Default to 5 PM
+    }
+
     return DateTime(
       date.year,
       date.month,
       date.day,
-      int.parse(parts[0]),
-      int.parse(parts[1]),
+      hour,
+      minute,
     );
   }
 }

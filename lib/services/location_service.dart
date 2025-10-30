@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/foundation.dart';
 
 class LocationService {
   static const LocationSettings _locationSettings = LocationSettings(
@@ -13,6 +14,7 @@ class LocationService {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         // Location services are not enabled
+        debugPrint('Location services are not enabled');
         return null;
       }
 
@@ -22,12 +24,14 @@ class LocationService {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           // Permissions are denied
+          debugPrint('Location permissions are denied');
           return null;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
         // Permissions are denied forever
+        debugPrint('Location permissions are denied forever');
         return null;
       }
 
@@ -37,24 +41,29 @@ class LocationService {
         timeLimit: const Duration(seconds: 30),
       );
     } catch (e) {
-      print('Error getting location: $e');
+      debugPrint('Error getting location: $e');
       return null;
     }
   }
 
-  Future<double> distanceBetween(
+ Future<double> distanceBetween(
     double startLatitude,
     double startLongitude,
     double endLatitude,
     double endLongitude,
   ) async {
-    return Geolocator.distanceBetween(
-      startLatitude,
-      startLongitude,
-      endLatitude,
-      endLongitude,
-    );
-  }
+    try {
+      return Geolocator.distanceBetween(
+        startLatitude,
+        startLongitude,
+        endLatitude,
+        endLongitude,
+      );
+    } catch (e) {
+      debugPrint('Error calculating distance: $e');
+      return 0.0; // Return 0 if calculation fails
+    }
+ }
 
   Future<bool> isWithinRadius({
     required double currentLat,
@@ -72,7 +81,7 @@ class LocationService {
     return distance <= radiusInMeters;
   }
 
-  Stream<Position> getPositionStream() {
+ Stream<Position> getPositionStream() {
     return Geolocator.getPositionStream(locationSettings: _locationSettings);
   }
 
@@ -84,7 +93,7 @@ class LocationService {
       // You might want to use geocoding package for this
       return '$latitude, $longitude';
     } catch (e) {
-      print('Error getting address: $e');
+      debugPrint('Error getting address: $e');
       return '$latitude, $longitude';
     }
   }

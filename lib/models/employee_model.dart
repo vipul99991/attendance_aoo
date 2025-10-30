@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class Employee {
   final String employeeId;
   final String name;
@@ -86,10 +88,25 @@ class WorkingHours {
   }
 
   Duration get totalWorkDuration {
-    final start = parseTime(startTime);
-    final end = parseTime(endTime);
-    final workDuration = end.difference(start);
-    return workDuration - Duration(minutes: breakDuration);
+    try {
+      final start = parseTime(startTime);
+      final end = parseTime(endTime);
+      final workDuration = end.difference(start);
+      
+      // Ensure the break duration doesn't exceed the total work duration
+      final breakDurationMs = Duration(minutes: breakDuration).inMilliseconds;
+      final workDurationMs = workDuration.inMilliseconds;
+      
+      if (breakDurationMs > workDurationMs) {
+        // If break is longer than total duration, return zero
+        return Duration.zero;
+      }
+      
+      return Duration(milliseconds: workDurationMs - breakDurationMs);
+    } catch (e) {
+      debugPrint('Error calculating total work duration: $e');
+      return Duration.zero; // Return zero if there's an error
+    }
   }
 
   DateTime parseTime(String time) {
