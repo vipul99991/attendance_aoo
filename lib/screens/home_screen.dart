@@ -7,7 +7,7 @@ import '../providers/attendance_provider.dart';
 import '../providers/user_provider.dart';
 import '../providers/theme_provider.dart';
 import '../utils/app_theme.dart';
-import '../widgets/attendance_card.dart';
+import '../widgets/check_in_out_card.dart';
 import '../widgets/quick_actions.dart';
 import '../widgets/statistics_overview.dart';
 import 'metrics_screen.dart';
@@ -93,162 +93,209 @@ class _HomeTab extends StatelessWidget {
         final now = DateTime.now();
 
         return Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Custom Header
-                  Container(
-                    padding: const EdgeInsets.all(20),
+          body: CustomScrollView(
+            slivers: [
+              // App Bar with gradient
+              SliverAppBar(
+                expandedHeight: 120,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
                     decoration: BoxDecoration(
                       gradient: AppTheme.primaryGradient,
-                      borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _getGreeting(),
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                user.name,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Consumer<ThemeProvider>(
-                          builder: (context, themeProvider, child) {
-                            return IconButton(
-                              onPressed: () => themeProvider.toggleTheme(),
-                              icon: Icon(
-                                themeProvider.isDarkMode
-                                    ? Icons.light_mode
-                                    : Icons.dark_mode,
-                                color: Colors.white,
-                              ),
-                              tooltip: 'Toggle Theme',
-                            );
-                          },
-                        ),
-                        CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.white.withValues(alpha: 0.2),
-                          child: user.profileImage != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(25),
-                                  child: Image.network(
-                                    user.profileImage!,
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _getGreeting(),
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                )
-                              : Text(
-                                  user.name[0].toUpperCase(),
-                                  style: const TextStyle(
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    user.name,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    DateFormat(
+                                      'EEEE, MMMM d, yyyy',
+                                    ).format(now),
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Consumer<ThemeProvider>(
+                              builder: (context, themeProvider, child) {
+                                return IconButton(
+                                  onPressed: () => themeProvider.toggleTheme(),
+                                  icon: Icon(
+                                    themeProvider.isDarkMode
+                                        ? Icons.light_mode
+                                        : Icons.dark_mode,
                                     color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
                                   ),
-                                ),
+                                  tooltip: 'Toggle Theme',
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.2,
+                              ),
+                              child: user.profileImage != null
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.network(
+                                        user.profileImage!,
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Text(
+                                      user.name[0].toUpperCase(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
+                ),
+              ),
 
-                  const SizedBox(height: 20),
-
-                  // Date and Status
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // Check-in/Check-out Card at the top
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            DateFormat('EEEE, MMMM d').format(now),
-                            style: AppTheme.headingSmall.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            'Attendance',
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            DateFormat('yyyy').format(now),
-                            style: AppTheme.bodyLarge.copyWith(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withValues(alpha: 0.7),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getStatusColor(
+                                attendanceProvider,
+                              ).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: _getStatusColor(attendanceProvider),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  _getStatusIcon(attendanceProvider),
+                                  size: 14,
+                                  color: _getStatusColor(attendanceProvider),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _getStatusText(attendanceProvider),
+                                  style: TextStyle(
+                                    color: _getStatusColor(attendanceProvider),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(
-                            attendanceProvider,
-                          ).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: _getStatusColor(attendanceProvider),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          _getStatusText(attendanceProvider),
-                          style: TextStyle(
-                            color: _getStatusColor(attendanceProvider),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+                      const SizedBox(height: 12),
+                      const CheckInOutCard(),
                     ],
                   ),
-
-                  const SizedBox(height: 30),
-
-                  // Quick Actions
-                  const QuickActions(),
-
-                  const SizedBox(height: 30),
-
-                  // Today's Attendance Card
-                  const AttendanceCard(),
-
-                  const SizedBox(height: 30),
-
-                  // Statistics Overview
-                  const StatisticsOverview(),
-
-                  const SizedBox(height: 20),
-                ],
+                ),
               ),
-            ),
+
+              // Quick Actions Section
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 30, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Quick Actions',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const QuickActions(),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Statistics Overview Section
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 30, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'This Month',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const StatisticsOverview(),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Bottom padding
+              const SliverToBoxAdapter(child: SizedBox(height: 30)),
+            ],
           ),
         );
       },
@@ -263,6 +310,18 @@ class _HomeTab extends StatelessWidget {
       return 'Good Afternoon';
     } else {
       return 'Good Evening';
+    }
+  }
+
+  IconData _getStatusIcon(AttendanceProvider provider) {
+    if (provider.hasCheckedInToday) {
+      if (provider.hasCheckedOutToday) {
+        return Icons.check_circle;
+      } else {
+        return Icons.access_time_filled;
+      }
+    } else {
+      return Icons.error_outline;
     }
   }
 
@@ -283,10 +342,10 @@ class _HomeTab extends StatelessWidget {
       if (provider.hasCheckedOutToday) {
         return 'Completed';
       } else {
-        return 'Checked In';
+        return 'In Progress';
       }
     } else {
-      return 'Not Checked In';
+      return 'Pending';
     }
   }
 }
@@ -1174,7 +1233,9 @@ class _ProfileTabState extends State<_ProfileTab> {
                         children: [
                           CircleAvatar(
                             radius: 50,
-                            backgroundColor: Colors.white.withValues(alpha: 0.2),
+                            backgroundColor: Colors.white.withValues(
+                              alpha: 0.2,
+                            ),
                             child: user.profileImage != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(50),

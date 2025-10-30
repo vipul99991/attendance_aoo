@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import '../models/employee_model.dart';
@@ -23,15 +24,57 @@ class AttendanceProvider extends ChangeNotifier {
   AttendanceRecord? get todayAttendance => _todayAttendance;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
-  bool get isCheckedInToday => _todayAttendance?.checkInTime != null;
-  bool get isCheckedOutToday {
-    // Check if today's attendance exists and has both check-in and check-out times
-    // This indicates a completed cycle for the current record
-    return _todayAttendance?.checkInTime != null && _todayAttendance?.checkOutTime != null;
+  bool get isCheckedInToday {
+    final today = DateTime.now();
+    final todayStart = DateTime(today.year, today.month, today.day);
+    final todayEnd = todayStart.add(const Duration(days: 1));
+
+    // Check if there's an active check-in for today (checked in but not out)
+    return _todayAttendance?.checkInTime != null &&
+        _todayAttendance?.checkOutTime == null &&
+        _todayAttendance!.date.isAfter(
+          todayStart.subtract(const Duration(days: 1)),
+        ) &&
+        _todayAttendance!.date.isBefore(todayEnd);
   }
-  
+
+  bool get isCheckedOutToday {
+    final today = DateTime.now();
+    final todayStart = DateTime(today.year, today.month, today.day);
+    final todayEnd = todayStart.add(const Duration(days: 1));
+
+    // Check if completed a cycle today (both check-in and check-out)
+    return _todayAttendance?.checkInTime != null &&
+        _todayAttendance?.checkOutTime != null &&
+        _todayAttendance!.date.isAfter(
+          todayStart.subtract(const Duration(days: 1)),
+        ) &&
+        _todayAttendance!.date.isBefore(todayEnd);
+  }
+
   // Check if there is a current incomplete attendance cycle
-  bool get hasActiveCheckIn => _todayAttendance?.checkInTime != null && _todayAttendance?.checkOutTime == null;
+  bool get hasActiveCheckIn {
+    final today = DateTime.now();
+    final todayStart = DateTime(today.year, today.month, today.day);
+
+    return _todayAttendance?.checkInTime != null &&
+        _todayAttendance?.checkOutTime == null &&
+        _todayAttendance!.date.isAtSameMomentAs(todayStart);
+  }
+
+  // Check if user can check in (either new day or completed previous cycle)
+  bool get canCheckIn {
+    final today = DateTime.now();
+    final todayStart = DateTime(today.year, today.month, today.day);
+
+    // Can check in if:
+    // 1. No attendance record for today, OR
+    // 2. Today's attendance is complete (checked out), OR
+    // 3. It's a new day
+    return _todayAttendance == null ||
+        isCheckedOutToday ||
+        _todayAttendance!.date.isBefore(todayStart);
+  }
 
   AttendanceProvider({
     required AttendanceService attendanceService,
@@ -50,12 +93,43 @@ class AttendanceProvider extends ChangeNotifier {
       await _attendanceRepository.initialize();
       await _loadAttendanceRecords();
       await _loadTodayAttendance();
+      // Set up periodic refresh to handle background state properly
+      _setupPeriodicRefresh();
     } catch (e) {
       debugPrint('Error initializing attendance: $e');
     }
   }
 
-  Future<void> _loadAttendanceRecords() async {
+  void _setupPeriodicRefresh() {
+    // Refresh every 30 seconds to ensure accurate time tracking
+    // and proper state management
+    Timer.periodic(const Duration(seconds: 30), (timer) async {
+      await _refreshAttendanceState();
+    });
+  }
+
+  Future<void> _refreshAttendanceState() async {
+    try {
+      await _loadTodayAttendance();
+      // Check if we have passed midnight and need to reset state
+      final now = DateTime.now();
+      final todayStart = DateTime(now.year, now.month, now.day);
+      
+      // If today's attendance is from a previous day, refresh the data
+      if (_todayAttendance != null &&
+          _todayAttendance!.date.isBefore(todayStart)) {
+        await _loadTodayAttendance();
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Error refreshing attendance state: $e');
+    }
+  }
+  
+  // Public method to refresh attendance state (called from lifecycle callbacks)
+  Future<void> refreshAttendanceState() async {
+    await _refreshAttendanceState();
+  }  Future<void> _loadAttendanceRecords() async {
     try {
       final records = await _attendanceRepository.getAllAttendanceRecords();
       if (_attendanceRecords.length != records.length ||
@@ -93,16 +167,11 @@ class AttendanceProvider extends ChangeNotifier {
       // Refresh today's attendance to ensure we have the latest state
       await _loadTodayAttendance();
 
-      // Check if already checked in today but not yet checked out for the current cycle
-      // Only prevent check-in if there's an active/incomplete check-in cycle
-      if (hasActiveCheckIn) {
-        _setError(Messages.alreadyCheckedIn);
+      // Check if user can check in (handles daily cycle logic)
+      if (!canCheckIn) {
+        _setError('You are already checked in. Please check out first.');
         return false;
       }
-      
-      // Refresh today's attendance again right before creating new record
-      await _loadTodayAttendance();
-
       String? locationData;
       String? photoPath;
 
@@ -166,17 +235,9 @@ class AttendanceProvider extends ChangeNotifier {
       // Refresh today's attendance to ensure we have the latest state
       await _loadTodayAttendance();
 
-      // Check if checked in today
-      if (!isCheckedInToday) {
-        _setError(Messages.notCheckedIn);
-        return false;
-      }
-
-      // Check if already checked out for the current cycle
-      // If the current attendance record already has a check-out time,
-      // the user needs to start a new cycle with a new check-in
-      if (isCheckedOutToday) {
-        _setError('You have already checked out for this cycle. Please check in again to start a new cycle.');
+      // Check if there's an active check-in session
+      if (!hasActiveCheckIn) {
+        _setError('No active check-in session found. Please check in first.');
         return false;
       }
 
@@ -240,11 +301,13 @@ class AttendanceProvider extends ChangeNotifier {
       _todayAttendance = updatedRecord;
       await _loadAttendanceRecords();
       // Don't call notifyListeners() here yet, we'll do it after the cycle reset
-      
+
       _setError(null);
-      
+
       // Allow immediate new check-in cycle after successful check-out
-      await Future.delayed(const Duration(milliseconds: 50)); // Small delay for UI consistency
+      await Future.delayed(
+        const Duration(milliseconds: 50),
+      ); // Small delay for UI consistency
       await _loadTodayAttendance(); // Reload to get the latest state
       notifyListeners(); // Ensure UI updates immediately
 
@@ -263,7 +326,7 @@ class AttendanceProvider extends ChangeNotifier {
     await _loadTodayAttendance();
     notifyListeners();
   }
-  
+
   // Method to force clear the current attendance state to allow immediate check-in
   Future<void> resetForNewCheckIn() async {
     // Reload today's attendance which will get the latest state
@@ -272,7 +335,7 @@ class AttendanceProvider extends ChangeNotifier {
     // The UI will determine this based on the hasActiveCheckIn property
     notifyListeners();
   }
-  
+
   // Method to create a new attendance cycle after check-out
   Future<void> prepareForNewCycle() async {
     // Refresh to get the latest state after check-out
@@ -281,7 +344,7 @@ class AttendanceProvider extends ChangeNotifier {
     // the UI will show the check-in button
     notifyListeners();
   }
-  
+
   // Method to explicitly allow a new check-in cycle after check-out
   Future<void> allowNewCheckInCycle() async {
     // Refresh today's attendance to get the latest state

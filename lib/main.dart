@@ -26,11 +26,18 @@ import 'services/location_service.dart';
 import 'services/camera_service.dart';
 import 'utils/app_theme.dart';
 
+// Global navigator key for accessing context from lifecycle callbacks
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Hive
   await Hive.initFlutter();
+
+  // Initialize AttendanceRepository
+  final attendanceRepository = AttendanceRepository();
+  await attendanceRepository.initialize();
 
   // Initialize database (skip on desktop platforms)
   // await DatabaseService().initializeDatabase();
@@ -45,11 +52,78 @@ void main() async {
     ),
   );
 
-  runApp(const AttendanceApp());
+  runApp(AttendanceApp(attendanceRepository: attendanceRepository));
 }
 
-class AttendanceApp extends StatelessWidget {
-  const AttendanceApp({super.key});
+class AttendanceApp extends StatefulWidget {
+  final AttendanceRepository attendanceRepository;
+
+  const AttendanceApp({super.key, required this.attendanceRepository});
+
+  @override
+  State<AttendanceApp> createState() => _AttendanceAppState();
+}
+
+class _AttendanceAppState extends State<AttendanceApp>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    // Handle app lifecycle changes for proper attendance tracking
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // App is resumed from background - refresh attendance state
+        _refreshAttendanceOnResume();
+        break;
+      case AppLifecycleState.paused:
+        // App is going to background - save current state
+        _saveAttendanceOnPause();
+        break;
+      case AppLifecycleState.detached:
+        // App is being terminated
+        break;
+      case AppLifecycleState.inactive:
+        // App is inactive (e.g., during a phone call)
+        break;
+      case AppLifecycleState.hidden:
+        // App is hidden but not paused (iOS 13+)
+        break;
+    }
+  }
+
+  void _refreshAttendanceOnResume() {
+    // Get the attendance provider and refresh state when app resumes
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      final attendanceProvider = Provider.of<AttendanceProvider>(
+        context,
+        listen: false,
+      );
+      attendanceProvider.refreshAttendanceState();
+    }
+  }
+
+  void _saveAttendanceOnPause() {
+    // Save current state when app goes to background
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      // The Hive database automatically persists data
+      debugPrint('App paused - attendance state saved');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +141,7 @@ class AttendanceApp extends StatelessWidget {
               uuid: const Uuid(),
             ),
             statisticsService: StatisticsService(),
-            attendanceRepository: AttendanceRepository(),
+            attendanceRepository: widget.attendanceRepository,
             uuid: const Uuid(),
           ),
         ),
