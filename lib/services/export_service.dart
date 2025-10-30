@@ -284,7 +284,7 @@ class ExportService {
                 ),
               )
               .value =
-          presentDays;
+          IntCellValue(presentDays);
 
       sheet
               .cell(
@@ -294,7 +294,7 @@ class ExportService {
                 ),
               )
               .value =
-          'Absent Days:';
+          TextCellValue('Absent Days:');
       sheet
               .cell(
                 CellIndex.indexByColumnRow(
@@ -303,7 +303,7 @@ class ExportService {
                 ),
               )
               .value =
-          absentDays;
+          IntCellValue(absentDays);
 
       sheet
               .cell(
@@ -313,7 +313,7 @@ class ExportService {
                 ),
               )
               .value =
-          'Late Days:';
+          TextCellValue('Late Days:');
       sheet
               .cell(
                 CellIndex.indexByColumnRow(
@@ -322,7 +322,7 @@ class ExportService {
                 ),
               )
               .value =
-          lateDays;
+          IntCellValue(lateDays);
 
       sheet
               .cell(
@@ -332,7 +332,7 @@ class ExportService {
                 ),
               )
               .value =
-          'Half Days:';
+          TextCellValue('Half Days:');
       sheet
               .cell(
                 CellIndex.indexByColumnRow(
@@ -341,7 +341,7 @@ class ExportService {
                 ),
               )
               .value =
-          halfDays;
+          IntCellValue(halfDays);
 
       // Calculate attendance percentage
       final workingDays = presentDays + lateDays + (halfDays * 0.5);
@@ -358,7 +358,7 @@ class ExportService {
                 ),
               )
               .value =
-          'Attendance %:';
+          TextCellValue('Attendance %:');
       sheet
               .cell(
                 CellIndex.indexByColumnRow(
@@ -367,7 +367,7 @@ class ExportService {
                 ),
               )
               .value =
-          '${attendancePercentage.toStringAsFixed(1)}%';
+          TextCellValue('${attendancePercentage.toStringAsFixed(1)}%');
 
       // Auto-fit columns
       for (int i = 0; i < headers.length; i++) {

@@ -136,7 +136,11 @@ class _CheckInOutCardState extends State<CheckInOutCard> {
                     attendanceProvider,
                   ),
                 ] else ...[
-                  _buildCompletedDisplay(),
+                  _buildCheckInButton(
+                    context,
+                    authProvider,
+                    attendanceProvider,
+                  ),
                 ],
 
                 // Error Display
@@ -483,6 +487,10 @@ class _CheckInOutCardState extends State<CheckInOutCard> {
           backgroundColor: Colors.orange,
         ),
       );
+      
+      // After successful check-out, allow for a new check-in cycle
+      await Future.delayed(const Duration(milliseconds: 10)); // Small delay to ensure state update
+      await attendanceProvider.allowNewCheckInCycle();
     }
   }
 }

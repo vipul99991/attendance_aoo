@@ -24,7 +24,14 @@ class AttendanceProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isCheckedInToday => _todayAttendance?.checkInTime != null;
-  bool get isCheckedOutToday => _todayAttendance?.checkOutTime != null;
+  bool get isCheckedOutToday {
+    // Check if today's attendance exists and has both check-in and check-out times
+    // This indicates a completed cycle for the current record
+    return _todayAttendance?.checkInTime != null && _todayAttendance?.checkOutTime != null;
+  }
+  
+  // Check if there is a current incomplete attendance cycle
+  bool get hasActiveCheckIn => _todayAttendance?.checkInTime != null && _todayAttendance?.checkOutTime == null;
 
   AttendanceProvider({
     required AttendanceService attendanceService,
@@ -66,10 +73,8 @@ class AttendanceProvider extends ChangeNotifier {
   Future<void> _loadTodayAttendance() async {
     try {
       final todayAttendance = await _attendanceRepository.getTodayAttendance();
-      if (_todayAttendance?.id != todayAttendance?.id) {
-        _todayAttendance = todayAttendance;
-        notifyListeners();
-      }
+      _todayAttendance = todayAttendance;
+      notifyListeners();
     } catch (e) {
       debugPrint('Error loading today attendance: $e');
     }
@@ -85,11 +90,18 @@ class AttendanceProvider extends ChangeNotifier {
       _setLoading(true);
       _clearError();
 
-      // Check if already checked in today
-      if (isCheckedInToday) {
+      // Refresh today's attendance to ensure we have the latest state
+      await _loadTodayAttendance();
+
+      // Check if already checked in today but not yet checked out for the current cycle
+      // Only prevent check-in if there's an active/incomplete check-in cycle
+      if (hasActiveCheckIn) {
         _setError(Messages.alreadyCheckedIn);
         return false;
       }
+      
+      // Refresh today's attendance again right before creating new record
+      await _loadTodayAttendance();
 
       String? locationData;
       String? photoPath;
@@ -129,6 +141,7 @@ class AttendanceProvider extends ChangeNotifier {
       // Update local data
       _todayAttendance = attendanceRecord;
       await _loadAttendanceRecords();
+      notifyListeners(); // Ensure UI updates immediately
 
       _setError(null);
       return true;
@@ -150,15 +163,20 @@ class AttendanceProvider extends ChangeNotifier {
       _setLoading(true);
       _clearError();
 
+      // Refresh today's attendance to ensure we have the latest state
+      await _loadTodayAttendance();
+
       // Check if checked in today
       if (!isCheckedInToday) {
         _setError(Messages.notCheckedIn);
         return false;
       }
 
-      // Check if already checked out
+      // Check if already checked out for the current cycle
+      // If the current attendance record already has a check-out time,
+      // the user needs to start a new cycle with a new check-in
       if (isCheckedOutToday) {
-        _setError('You have already checked out today.');
+        _setError('You have already checked out for this cycle. Please check in again to start a new cycle.');
         return false;
       }
 
@@ -221,8 +239,15 @@ class AttendanceProvider extends ChangeNotifier {
       // Update local data
       _todayAttendance = updatedRecord;
       await _loadAttendanceRecords();
-
+      // Don't call notifyListeners() here yet, we'll do it after the cycle reset
+      
       _setError(null);
+      
+      // Allow immediate new check-in cycle after successful check-out
+      await Future.delayed(const Duration(milliseconds: 50)); // Small delay for UI consistency
+      await _loadTodayAttendance(); // Reload to get the latest state
+      notifyListeners(); // Ensure UI updates immediately
+
       return true;
     } catch (e) {
       _setError('Check-out failed: ${e.toString()}');
@@ -230,6 +255,40 @@ class AttendanceProvider extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  Future<void> startNewAttendanceCycle() async {
+    // Refresh today's attendance to get the latest state
+    // This will load the most recent attendance record which may be a completed one
+    await _loadTodayAttendance();
+    notifyListeners();
+  }
+  
+  // Method to force clear the current attendance state to allow immediate check-in
+  Future<void> resetForNewCheckIn() async {
+    // Reload today's attendance which will get the latest state
+    await _loadTodayAttendance();
+    // If the current record is completed, we still want to allow new check-ins
+    // The UI will determine this based on the hasActiveCheckIn property
+    notifyListeners();
+  }
+  
+  // Method to create a new attendance cycle after check-out
+  Future<void> prepareForNewCycle() async {
+    // Refresh to get the latest state after check-out
+    await _loadTodayAttendance();
+    // This will ensure that if the most recent record is completed,
+    // the UI will show the check-in button
+    notifyListeners();
+  }
+  
+  // Method to explicitly allow a new check-in cycle after check-out
+  Future<void> allowNewCheckInCycle() async {
+    // Refresh today's attendance to get the latest state
+    // This will load the most recent record, which could be completed
+    await _loadTodayAttendance();
+    // Notify listeners to update the UI
+    notifyListeners();
   }
 
   Future<List<AttendanceRecord>> getAttendanceForDateRange(

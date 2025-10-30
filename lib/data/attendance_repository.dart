@@ -22,8 +22,9 @@ class AttendanceRepository {
   /// Saves an attendance record to the database
   Future<void> saveAttendanceRecord(AttendanceRecord record) async {
     try {
-      final todayKey = DateUtils.formatDate(record.date);
-      await attendanceBox.put(todayKey, record.toJson());
+      // Use a unique key that combines date and record ID to support multiple records per day
+      final recordKey = '${DateUtils.formatDate(record.date)}_${record.id}';
+      await attendanceBox.put(recordKey, record.toJson());
     } catch (e) {
       debugPrint('Error saving attendance record: $e');
       rethrow;
@@ -34,14 +35,26 @@ class AttendanceRepository {
   Future<AttendanceRecord?> getTodayAttendance() async {
     try {
       final today = DateTime.now();
-      final todayKey = DateUtils.formatDate(today);
-      final todayData = attendanceBox.get(todayKey);
+      final todayFormatted = DateUtils.formatDate(today);
+      final allRecords = await getAllAttendanceRecords();
+      final todayRecords = allRecords
+          .where((record) => DateUtils.formatDate(record.date) == todayFormatted)
+          .toList();
       
-      if (todayData != null) {
-        return AttendanceRecord.fromJson(
-          Map<String, dynamic>.from(todayData),
-        );
+      // Return the most recent incomplete record, or the most recent record if all are complete
+      final incompleteRecords = todayRecords.where((record) => record.checkOutTime == null).toList();
+      if (incompleteRecords.isNotEmpty) {
+        // Sort by check-in time descending to get the most recent
+        incompleteRecords.sort((a, b) => b.checkInTime!.compareTo(a.checkInTime!));
+        return incompleteRecords.first;
       }
+      
+      // If all records are complete, return the most recent one
+      if (todayRecords.isNotEmpty) {
+        todayRecords.sort((a, b) => b.checkInTime!.compareTo(a.checkInTime!));
+        return todayRecords.first;
+      }
+      
       return null;
     } catch (e) {
       debugPrint('Error getting today attendance: $e');
@@ -53,10 +66,11 @@ class AttendanceRepository {
   Future<List<AttendanceRecord>> getAllAttendanceRecords() async {
     try {
       final records = attendanceBox.values.toList();
-      return records
+      final attendanceRecords = records
           .map((record) => AttendanceRecord.fromJson(Map<String, dynamic>.from(record)))
           .toList()
         ..sort((a, b) => b.date.compareTo(a.date));
+      return attendanceRecords;
     } catch (e) {
       debugPrint('Error getting all attendance records: $e');
       return [];
@@ -86,14 +100,19 @@ class AttendanceRepository {
   /// Gets a specific attendance record by date
  Future<AttendanceRecord?> getAttendanceForDate(DateTime date) async {
     try {
-      final dateKey = DateUtils.formatDate(date);
-      final data = attendanceBox.get(dateKey);
+      final dateFormatted = DateUtils.formatDate(date);
+      final allRecords = await getAllAttendanceRecords();
+      final dateRecords = allRecords
+          .where((record) => DateUtils.formatDate(record.date) == dateFormatted)
+          .toList();
       
-      if (data != null) {
-        return AttendanceRecord.fromJson(
-          Map<String, dynamic>.from(data),
-        );
+      // Return the first record for the date (or most recent if there are multiple)
+      if (dateRecords.isNotEmpty) {
+        // Sort by check-in time descending to get the most recent
+        dateRecords.sort((a, b) => b.checkInTime!.compareTo(a.checkInTime!));
+        return dateRecords.first;
       }
+      
       return null;
     } catch (e) {
       debugPrint('Error getting attendance for date: $e');

@@ -40,12 +40,12 @@ class _EnhancedHomeScreenState extends State<EnhancedHomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header Section
-              _buildHeader(),
+              // Check-in/Check-out Card (Top Priority - Moved to top)
+              const CheckInOutCard(),
               const SizedBox(height: 24),
 
-              // Check-in/Check-out Card (Top Priority)
-              const CheckInOutCard(),
+              // Header Section
+              _buildHeader(),
               const SizedBox(height: 24),
 
               // Quick Actions Section
